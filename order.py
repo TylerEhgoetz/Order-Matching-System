@@ -7,12 +7,29 @@ class Order:
         self.symbol = symbol
         self.quantity = quantity
         self.price = price
-        self.is_buy_order = order_type
+        self.order_type = order_type
         self.timestamp = datetime.now()
         self.order_id = self.generate_order_id()
 
     def __repr__(self):
-        return f"Order({self.symbol}, {self.quantity}, {self.price}, {self.is_buy_order}, {self.timestamp})"
+        return f"{self.order_type.lower().capitalize()} {self.symbol} {self.quantity} @ {self.price} ({self.timestamp})"
+
+    def __lt__(self, other):
+        if (
+            self.order_type == OrderType.BUY.value
+            and other.order_type == OrderType.BUY.value
+        ):
+            if self.price == other.price:
+                return self.timestamp < other.timestamp
+            return self.price > other.price
+        elif (
+            self.order_type == OrderType.SELL.value
+            and other.order_type == OrderType.SELL.value
+        ):
+            if self.price == other.price:
+                return self.timestamp < other.timestamp
+            return self.price < other.price
+        return False
 
     def generate_order_id(self):
         return f"{self.symbol}-{self.timestamp}"
