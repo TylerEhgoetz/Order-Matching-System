@@ -18,4 +18,4 @@ class Trade:
         self.timestamp = datetime.now()
 
     def __repr__(self):
-        return f"Trade({self.buy_order_id}, {self.sell_order_id}, {self.symbol}, {self.quantity}, {self.price}, {self.timestamp})"
+        return f"Executed Trade for {self.symbol}: {self.quantity} @ {self.price} ({self.timestamp})"
