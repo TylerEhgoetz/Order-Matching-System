@@ -15,17 +15,7 @@ class Order:
         return f"{self.order_type.lower().capitalize()} {self.symbol} {self.quantity} @ {self.price} ({self.timestamp})"
 
     def __lt__(self, other):
-        if (
-            self.order_type == OrderType.BUY.value
-            and other.order_type == OrderType.BUY.value
-        ):
-            if self.price == other.price:
-                return self.timestamp < other.timestamp
-            return self.price > other.price
-        elif (
-            self.order_type == OrderType.SELL.value
-            and other.order_type == OrderType.SELL.value
-        ):
+        if self.order_type == other.order_type:
             if self.price == other.price:
                 return self.timestamp < other.timestamp
             return self.price < other.price

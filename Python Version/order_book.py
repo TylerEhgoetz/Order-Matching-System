@@ -14,17 +14,19 @@ class OrderBook:
 
     def add_order(self, order: Order) -> None:
         if order.order_type == OrderType.BUY.value:
-            heapq.heappush(self.bids, (-order.price, order.timestamp, order))
+            order.price = -order.price
+            heapq.heappush(self.bids, (order))
         else:
-            heapq.heappush(self.asks, (order.price, order.timestamp, order))
+            heapq.heappush(self.asks, (order))
         self.match_orders()
 
     def match_orders(self) -> None:
         while self.bids and self.asks:
-            best_bid, bid_time, bid_order = self.bids[0]
-            best_ask, ask_time, ask_order = self.asks[0]
+            bid_order = self.bids[0]
+            ask_order = self.asks[0]
 
-            best_bid = -best_bid
+            best_bid = -bid_order.price
+            best_ask = ask_order.price
 
             if best_bid >= best_ask:
                 trade_price = best_ask
@@ -45,11 +47,11 @@ class OrderBook:
 
                 heapq.heappop(self.bids)
                 if bid_order.quantity > 0:
-                    heapq.heappush(self.bids, (-best_bid, bid_time, bid_order))
+                    heapq.heappush(self.bids, (bid_order))
 
                 heapq.heappop(self.asks)
                 if ask_order.quantity > 0:
-                    heapq.heappush(self.asks, (best_ask, ask_time, ask_order))
+                    heapq.heappush(self.asks, (ask_order))
             else:
                 break
 
