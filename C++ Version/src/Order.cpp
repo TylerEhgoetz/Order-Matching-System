@@ -8,8 +8,17 @@ Order::Order(
       price{ price },
       quantity{ quantity },
       type{ type },
-      timestamp{ std::chrono::system_clock::now() }
+      timestamp{
+          std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())
+      }
 {
-    orderID = symbol.data()
-              + std::to_string(std::chrono::system_clock::to_time_t(timestamp));
+    orderID = symbol.data() + std::to_string(timestamp);
+}
+
+std::string Order::toString() const
+{
+    std::ostringstream oss;
+    oss << type.capatalize() << ' ' << symbol << ' ' << quantity << " @ "
+        << price << " (" << timestamp << ')';
+    return oss.str();
 }

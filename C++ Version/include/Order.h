@@ -8,24 +8,33 @@
 class Order
 {
 public:
-    enum OrderType
+    struct OrderType
     {
-        BUY,
-        SELL
+        enum Type
+        {
+            BUY,
+            SELL
+        };
+
+        std::string lower() const { return type == BUY ? "buy" : "sell"; }
+
+        std::string capatalize() const { return type == BUY ? "Buy" : "Sell"; }
+
+        Type type;
     };
 
 private:
-    std::string                           orderID;
-    std::string                           symbol;
-    double                                price;
-    int                                   quantity;
-    OrderType                             type;
-    std::chrono::system_clock::time_point timestamp;
+    std::string orderID;
+    std::string symbol;
+    double      price;
+    int         quantity;
+    OrderType   type;
+    std::time_t timestamp;
 
 public:
     Order(std::string_view symbol, double price, int quantity, OrderType type);
 
-    std::string_view toString() const;
+    std::string toString() const;
 
     void operator<(const Order& other) const;
 };
