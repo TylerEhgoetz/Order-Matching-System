@@ -30,11 +30,18 @@ private:
     int         quantity;
     OrderType   type;
     std::time_t timestamp;
+    std::string representation;
+
+    std::string_view toString() const
+    {
+        return "Order: " + symbol + " " + type.capatalize() + " "
+               + std::to_string(quantity) + " @ " + std::to_string(price);
+    }
 
 public:
     Order(std::string_view symbol, double price, int quantity, OrderType type);
 
-    std::string toString() const;
+    std::string_view getRepresentation() const { return representation; }
 
     void operator<(const Order& other) const;
 };
