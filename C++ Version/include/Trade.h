@@ -14,7 +14,7 @@ private:
     double      price;
     int         quantity;
 
-    std::string_view reference;
+    std::string_view representation;
 
     std::string_view toString() const
     {
@@ -30,6 +30,8 @@ public:
         double           price,
         int              quantity
     );
+
+    std::string_view getRepresentation() const { return representation; }
 };
 
 #endif   // TRADE_H

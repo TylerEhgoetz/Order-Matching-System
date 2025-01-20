@@ -13,5 +13,5 @@ Trade::Trade(
       price{ price },
       quantity{ quantity }
 {
-    reference = toString();
+    representation = toString();
 }
