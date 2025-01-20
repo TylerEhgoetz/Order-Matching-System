@@ -43,7 +43,14 @@ public:
 
     std::string_view getRepresentation() const { return representation; }
 
-    void operator<(const Order& other) const;
+    OrderType::Type  getType() const { return type.type; }
+    double           getPrice() const { return price; }
+    int              getQuantity() const { return quantity; }
+    void             setQuantity(int newQuantity) { quantity = newQuantity; }
+    std::string_view getOrderID() const { return orderID; }
+
+    bool operator<(const Order& other) const;
+    bool operator>(const Order& other) const { return other < *this; }
 };
 
 #endif   // ORDER_H
