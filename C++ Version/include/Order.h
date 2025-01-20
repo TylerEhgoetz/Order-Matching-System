@@ -24,13 +24,13 @@ public:
     };
 
 private:
-    std::string orderID;
-    std::string symbol;
-    double      price;
-    int         quantity;
-    OrderType   type;
-    std::time_t timestamp;
-    std::string representation;
+    std::string      orderID;
+    std::string      symbol;
+    double           price;
+    int              quantity;
+    OrderType        type;
+    std::time_t      timestamp;
+    std::string_view representation;
 
     std::string_view toString() const
     {
