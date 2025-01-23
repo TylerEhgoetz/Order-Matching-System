@@ -15,7 +15,12 @@ private:
 public:
     OrderManager() = default;
 
-    void addOrder(std::string_view symbol, const Order& order);
+    void addOrder(
+        std::string_view symbol,
+        Order::OrderType orderType,
+        double           price,
+        int              quantity
+    );
     void viewOrderBook(std::string_view symbol) const;
     void viewTrades(std::string_view symbol) const;
 };
