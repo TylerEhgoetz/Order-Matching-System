@@ -10,14 +10,37 @@
 #include <unordered_map>
 #include <vector>
 
+struct BuyOrderComparator
+{
+    bool operator()(const Order& lhs, const Order& rhs) const
+    {
+        if (lhs.getPrice() == rhs.getPrice())
+        {
+            return lhs.getTimestamp() < rhs.getTimestamp();
+        }
+        return lhs.getPrice() < rhs.getPrice();
+    }
+};
+
+struct SellOrderComparator
+{
+    bool operator()(const Order& lhs, const Order& rhs) const
+    {
+        if (lhs.getPrice() == rhs.getPrice())
+        {
+            return lhs.getTimestamp() < rhs.getTimestamp();
+        }
+        return lhs.getPrice() > rhs.getPrice();
+    }
+};
+
 class OrderBook
 {
 private:
-    std::priority_queue<Order>                                          bids;
-    std::priority_queue<Order, std::vector<Order>, std::greater<Order>> asks;
-    std::vector<Trade>                                                  trades;
-    std::string                                                         symbol;
-    std::unordered_map<std::string, std::vector<Order>> orderBook;
+    std::string                                                        m_symbol;
+    std::priority_queue<Order, std::vector<Order>, BuyOrderComparator> m_bids;
+    std::priority_queue<Order, std::vector<Order>, SellOrderComparator> m_asks;
+    std::vector<Trade> m_trades;
 
 public:
     OrderBook(std::string_view symbol);
@@ -27,7 +50,7 @@ public:
     void displayOrderBook() const;
     void displayTrades() const;
 
-    bool empty() const { return bids.empty() && asks.empty(); }
+    bool bids_or_ask_empty() const { return m_bids.empty() || m_asks.empty(); }
 };
 
 #endif   // ORDERBOOK_H

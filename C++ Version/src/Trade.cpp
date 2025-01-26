@@ -1,17 +1,29 @@
 #include "Trade.h"
+#include <iomanip>
+#include <sstream>
 
 Trade::Trade(
-    std::string_view buy_order_id,
-    std::string_view sell_order_id,
+    std::string_view buyOrderId,
+    std::string_view sellOrderId,
     std::string_view symbol,
     double           price,
     int              quantity
 )
-    : buy_order_id{ buy_order_id },
-      sell_order_id{ sell_order_id },
-      symbol{ symbol },
-      price{ price },
-      quantity{ quantity }
+    : m_buyOrderId{ buyOrderId },
+      m_sellOrderId{ sellOrderId },
+      m_symbol{ symbol },
+      m_price{ price },
+      m_quantity{ quantity },
+      m_representation{}
 {
-    representation = toString();
+    m_representation = buildRepresentation();
+}
+
+std::string Trade::buildRepresentation() const
+{
+    std::ostringstream oss;
+    oss << "Trade: " << m_buyOrderId << " -> " << m_sellOrderId << " "
+        << m_symbol << " " << m_quantity << " @ " << std::fixed
+        << std::setprecision(2) << m_price;
+    return oss.str();
 }

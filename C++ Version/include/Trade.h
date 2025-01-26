@@ -8,30 +8,25 @@
 class Trade
 {
 private:
-    std::string buy_order_id;
-    std::string sell_order_id;
-    std::string symbol;
-    double      price;
-    int         quantity;
+    std::string m_buyOrderId;
+    std::string m_sellOrderId;
+    std::string m_symbol;
+    double      m_price;
+    int         m_quantity;
+    std::string m_representation;
 
-    std::string_view representation;
-
-    std::string_view toString() const
-    {
-        return "Trade: " + buy_order_id + " -> " + sell_order_id + " " + symbol
-               + " " + std::to_string(quantity) + " @ " + std::to_string(price);
-    }
+    std::string buildRepresentation() const;
 
 public:
     Trade(
-        std::string_view buy_order_id,
-        std::string_view sell_order_id,
+        std::string_view buyOrderId,
+        std::string_view sellOrderId,
         std::string_view symbol,
         double           price,
         int              quantity
     );
 
-    std::string_view getRepresentation() const { return representation; }
+    std::string_view getRepresentation() const { return m_representation; }
 };
 
 #endif   // TRADE_H

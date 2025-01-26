@@ -10,16 +10,13 @@
 class OrderManager
 {
 private:
-    std::unordered_map<std::string, std::unique_ptr<OrderBook>> orderBooks;
+    std::unordered_map<std::string, std::unique_ptr<OrderBook>> m_orderBooks;
 
 public:
-    OrderManager() = default;
+    OrderManager();
 
     void addOrder(
-        std::string_view symbol,
-        Order::OrderType orderType,
-        double           price,
-        int              quantity
+        std::string symbol, OrderType orderType, double price, int quantity
     );
     void viewOrderBook(std::string_view symbol) const;
     void viewTrades(std::string_view symbol) const;

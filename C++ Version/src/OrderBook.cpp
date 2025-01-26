@@ -2,64 +2,69 @@
 #include <iostream>
 
 OrderBook::OrderBook(std::string_view symbol)
-    : symbol{ symbol }
+    : m_symbol{ symbol }, m_bids{}, m_asks{}, m_trades{}
 {}
 
 void OrderBook::addOrder(const Order& order)
 {
-    if (order.getType() == Order::OrderType::BUY)
+    if (order.getType() == OrderType::BUY)
     {
-        bids.push(order);
+        m_bids.push(order);
     }
     else
     {
-        asks.push(order);
+        m_asks.push(order);
     }
     matchOrders();
 }
 
 void OrderBook::matchOrders()
 {
-    while (!empty())
+    while (!bids_or_ask_empty())
     {
         // Get the bid and ask orders
-        Order bidOrder         = bids.top();
-        Order askOrder         = asks.top();
+        Order bidOrder            = m_bids.top();
+        Order askOrder            = m_asks.top();
 
         // Get the best bid and ask prices
-        const int bestBidPrice = bidOrder.getPrice();
-        const int bestAskPrice = askOrder.getPrice();
+        const double bestBidPrice = bidOrder.getPrice();
+        const double bestAskPrice = askOrder.getPrice();
 
         if (bestBidPrice >= bestAskPrice)
         {
-            const int tradePrice    = bestAskPrice;
-            const int tradeQuantity = std::min(
+            const double tradePrice    = bestAskPrice;
+            const int    tradeQuantity = std::min(
                 bidOrder.getQuantity(), askOrder.getQuantity()
             );
 
-            Trade trade{ bidOrder.getOrderID(),
-                         askOrder.getOrderID(),
-                         symbol,
+            Trade trade{ bidOrder.getOrderID().data(),
+                         askOrder.getOrderID().data(),
+                         m_symbol,
                          tradePrice,
                          tradeQuantity };
 
-            trades.push_back(trade);
+            m_trades.push_back(trade);
             std::cout << "Trade Executed: " << trade.getRepresentation()
                       << '\n';
 
-            bidOrder.setQuantity(bidOrder.getQuantity() - tradeQuantity);
-            askOrder.setQuantity(askOrder.getQuantity() - tradeQuantity);
+            m_asks.pop();
+            m_bids.pop();
 
-            bids.pop();
-            if (bidOrder.getQuantity() > 0)
+            int remainingBidQuantity = bidOrder.getQuantity() - tradeQuantity;
+            int remainingAskQuantity = askOrder.getQuantity() - tradeQuantity;
+
+            if (remainingBidQuantity > 0)
             {
-                bids.push(bidOrder);
+                Order newBid = bidOrder;
+                newBid.setQuantity(remainingBidQuantity);
+                m_bids.push(newBid);
             }
 
-            asks.pop();
-            if (askOrder.getQuantity() > 0)
+            if (remainingAskQuantity > 0)
             {
-                asks.push(askOrder);
+                Order newAsk = askOrder;
+                newAsk.setQuantity(remainingAskQuantity);
+                m_asks.push(newAsk);
             }
         }
         else
@@ -71,9 +76,10 @@ void OrderBook::matchOrders()
 
 void OrderBook::displayOrderBook() const
 {
-    std::cout << "Order Book for " << symbol << '\n';
+    std::cout << "Order Book for " << m_symbol << '\n';
     std::cout << "Buy Orders:\n";
-    std::priority_queue<Order> bidsCopy = bids;
+    std::priority_queue<Order, std::vector<Order>, BuyOrderComparator>
+        bidsCopy = m_bids;
     while (!bidsCopy.empty())
     {
         std::cout << bidsCopy.top().getRepresentation() << '\n';
@@ -81,8 +87,8 @@ void OrderBook::displayOrderBook() const
     }
 
     std::cout << "Sell Orders:\n";
-    std::priority_queue<Order, std::vector<Order>, std::greater<Order>>
-        asksCopy = asks;
+    std::priority_queue<Order, std::vector<Order>, SellOrderComparator>
+        asksCopy = m_asks;
     while (!asksCopy.empty())
     {
         std::cout << asksCopy.top().getRepresentation() << '\n';
@@ -92,8 +98,8 @@ void OrderBook::displayOrderBook() const
 
 void OrderBook::displayTrades() const
 {
-    std::cout << "Trades for " << symbol << '\n';
-    for (const Trade& trade : trades)
+    std::cout << "Trades for " << m_symbol << '\n';
+    for (const Trade& trade : m_trades)
     {
         std::cout << trade.getRepresentation() << '\n';
     }
