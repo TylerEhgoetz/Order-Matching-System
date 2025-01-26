@@ -3,51 +3,37 @@
 
 #include <chrono>
 #include <string>
-#include <string_view>
+
+enum class OrderType
+{
+    BUY,
+    SELL
+};
 
 class Order
 {
-public:
-    struct OrderType
-    {
-        enum Type
-        {
-            BUY,
-            SELL
-        };
-
-        std::string lower() const { return type == BUY ? "buy" : "sell"; }
-
-        std::string capatalize() const { return type == BUY ? "Buy" : "Sell"; }
-
-        Type type;
-    };
-
 private:
-    std::string      orderID;
-    std::string      symbol;
-    double           price;
-    int              quantity;
-    OrderType        type;
-    std::time_t      timestamp;
-    std::string_view representation;
+    std::string m_orderId;
+    std::string m_symbol;
+    double      m_price;
+    int         m_quantity;
+    OrderType   m_type;
+    std::time_t m_timestamp;
+    std::string m_representation;
 
-    std::string_view toString() const
-    {
-        return "Order: " + symbol + " " + type.capatalize() + " "
-               + std::to_string(quantity) + " @ " + std::to_string(price);
-    }
+    std::string buildRepresentation() const;
 
 public:
     Order(std::string_view symbol, double price, int quantity, OrderType type);
 
-    std::string_view getRepresentation() const { return representation; }
+    std::string_view getRepresentation() const { return m_representation; }
 
-    OrderType::Type  getType() const { return type.type; }
-    double           getPrice() const { return price; }
-    int              getQuantity() const { return quantity; }
-    void             setQuantity(int newQuantity) { quantity = newQuantity; }
-    std::string_view getOrderID() const { return orderID; }
+    OrderType        getType() const { return m_type; }
+    double           getPrice() const { return m_price; }
+    int              getQuantity() const { return m_quantity; }
+    void             setQuantity(int newQuantity) { m_quantity = newQuantity; }
+    std::string_view getOrderID() const { return m_orderId; }
+    std::time_t      getTimestamp() const { return m_timestamp; }
 
     bool operator<(const Order& other) const;
     bool operator>(const Order& other) const { return other < *this; }
