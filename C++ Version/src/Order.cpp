@@ -34,31 +34,3 @@ std::string Order::buildRepresentation() const
         << " @ " << std::fixed << std::setprecision(2) << m_price;
     return oss.str();
 }
-
-bool Order::operator<(const Order& other) const
-{
-    // For priority_queue, we define less-than based on price and timestamp
-    // Higher price has higher priority for BUY orders
-    // Lower price has higher priority for SELL orders
-    // Time priority: earlier orders have higher priority
-
-    if (m_type == other.m_type)
-    {
-        if (m_price == other.m_price)
-        {
-            return m_timestamp
-                   > other.m_timestamp;   // Earlier orders have higher priority
-        }
-        if (m_type == OrderType::BUY)
-        {
-            return m_price
-                   < other.m_price;   // Higher price has higher priority
-        }
-        else
-        {
-            return m_price > other.m_price;   // Lower price has higher priority
-        }
-    }
-    // If different types, BUY orders have higher priority
-    return m_type == OrderType::BUY;
-}

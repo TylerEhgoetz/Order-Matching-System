@@ -34,9 +34,6 @@ public:
     void             setQuantity(int newQuantity) { m_quantity = newQuantity; }
     std::string_view getOrderID() const { return m_orderId; }
     std::time_t      getTimestamp() const { return m_timestamp; }
-
-    bool operator<(const Order& other) const;
-    bool operator>(const Order& other) const { return other < *this; }
 };
 
 #endif   // ORDER_H
