@@ -10,25 +10,27 @@
 #include <unordered_map>
 #include <vector>
 
+// Comparator for buy orders: highest price first, then earliest timestamp
 struct BuyOrderComparator
 {
     bool operator()(const Order& lhs, const Order& rhs) const
     {
         if (lhs.getPrice() == rhs.getPrice())
         {
-            return lhs.getTimestamp() < rhs.getTimestamp();
+            return lhs.getTimestamp() > rhs.getTimestamp();
         }
         return lhs.getPrice() < rhs.getPrice();
     }
 };
 
+// Comparator for sell orders: lowest price first, then earliest timestamp
 struct SellOrderComparator
 {
     bool operator()(const Order& lhs, const Order& rhs) const
     {
         if (lhs.getPrice() == rhs.getPrice())
         {
-            return lhs.getTimestamp() < rhs.getTimestamp();
+            return lhs.getTimestamp() > rhs.getTimestamp();
         }
         return lhs.getPrice() > rhs.getPrice();
     }
