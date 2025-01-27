@@ -16,8 +16,8 @@ void OrderManager::addOrder(
     }
 
     Order newOrder{ symbol, price, quantity, orderType };
-    m_orderBooks[key]->addOrder(newOrder);
     std::cout << "Order Added: " << newOrder.getRepresentation() << '\n';
+    m_orderBooks[key]->addOrder(newOrder);
 }
 
 void OrderManager::viewOrderBook(std::string_view symbol) const

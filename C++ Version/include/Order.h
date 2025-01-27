@@ -19,14 +19,16 @@ private:
     int         m_quantity;
     OrderType   m_type;
     std::time_t m_timestamp;
-    std::string m_representation;
 
-    std::string buildRepresentation() const;
+    const std::string buildRepresentation() const;
 
 public:
     Order(std::string_view symbol, double price, int quantity, OrderType type);
 
-    std::string_view getRepresentation() const { return m_representation; }
+    const std::string getRepresentation() const
+    {
+        return buildRepresentation();
+    }
 
     OrderType        getType() const { return m_type; }
     double           getPrice() const { return m_price; }

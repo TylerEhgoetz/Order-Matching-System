@@ -19,14 +19,12 @@ Order::Order(
       m_type{ type },
       m_timestamp{
           std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())
-      },
-      m_representation{}
+      }
 {
-    m_orderId        = generateOrderID(symbol, m_timestamp);
-    m_representation = buildRepresentation();
+    m_orderId = generateOrderID(symbol, m_timestamp);
 }
 
-std::string Order::buildRepresentation() const
+const std::string Order::buildRepresentation() const
 {
     std::ostringstream oss;
     oss << "Order: " << m_symbol << " "
